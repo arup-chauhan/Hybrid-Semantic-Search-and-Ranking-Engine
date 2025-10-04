@@ -1,4 +1,14 @@
 spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/metadata_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
   kafka:
     consumer:
       bootstrap-servers: localhost:9092
@@ -9,6 +19,3 @@ spring:
 
 server:
   port: 8082
-
-solr:
-  url: http://localhost:8983/solr/hybrid_core
