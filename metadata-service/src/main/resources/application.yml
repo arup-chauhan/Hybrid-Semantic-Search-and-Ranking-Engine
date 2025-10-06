@@ -1,0 +1,12 @@
+server:
+  port: 8095
+
+spring:
+  datasource:
+    url: jdbc:postgresql://metadata-db:5432/metadata
+    username: metadata_user
+    password: metadata_pass
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
