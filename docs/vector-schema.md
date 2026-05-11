@@ -16,7 +16,14 @@ This document describes the PostgreSQL schema expected by `vector-service` for s
 - `updated_at` `TIMESTAMPTZ` default `NOW()`
 
 Index:
-- `hnsw` index on `embedding` with `vector_cosine_ops` (use `WITH (m=16, ef_construction=200)` for fast ANN)
+- `hnsw` index on `embedding` with `vector_cosine_ops`:
+
+```sql
+CREATE INDEX IF NOT EXISTS idx_vector_metadata_embedding_hnsw
+    ON vector_metadata
+    USING hnsw (embedding vector_cosine_ops)
+    WITH (m = 16, ef_construction = 200);
+```
 
 ### `query_logs`
 

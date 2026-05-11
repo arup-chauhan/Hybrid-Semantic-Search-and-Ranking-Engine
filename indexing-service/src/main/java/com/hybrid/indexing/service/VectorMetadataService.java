@@ -2,6 +2,8 @@ package com.hybrid.indexing.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,8 @@ import java.util.stream.StreamSupport;
 
 @Service
 public class VectorMetadataService {
+
+    private static final Logger log = LoggerFactory.getLogger(VectorMetadataService.class);
 
     private final JdbcTemplate jdbcTemplate;
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -62,7 +66,8 @@ public class VectorMetadataService {
                     title,
                     vectorLiteral
             );
-        } catch (Exception ignored) {
+        } catch (Exception ex) {
+            log.warn("Failed to upsert vector metadata for documentId={}: {}", documentId, ex.getMessage());
         }
     }
 

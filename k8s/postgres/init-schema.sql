@@ -7,10 +7,10 @@ CREATE TABLE IF NOT EXISTS vector_metadata (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE INDEX IF NOT EXISTS idx_vector_metadata_embedding_ivfflat
+CREATE INDEX IF NOT EXISTS idx_vector_metadata_embedding_hnsw
     ON vector_metadata
-    USING ivfflat (embedding vector_cosine_ops)
-    WITH (lists = 100);
+    USING hnsw (embedding vector_cosine_ops)
+    WITH (m = 16, ef_construction = 200);
 
 CREATE TABLE IF NOT EXISTS query_logs (
     id BIGSERIAL PRIMARY KEY,

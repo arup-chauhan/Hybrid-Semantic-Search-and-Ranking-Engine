@@ -1,4 +1,4 @@
-# Hybrid Retrieval and Ranking Engine
+`# Hybrid Retrieval and Ranking Engine
 
 A production-ready distributed search platform that combines lexical and semantic retrieval, then fuses both signals into a single ranked response.
 
@@ -27,7 +27,7 @@ A production-ready distributed search platform that combines lexical and semanti
 Hybrid Retrieval and Ranking Engine is designed for high-quality search over large datasets by combining:
 
 - Sparse lexical retrieval (BM25 on SolrCloud)
-- Dense semantic retrieval (pgvector on PostgreSQL)
+- Dense semantic retrieval (PostgreSQL + pgvector HNSW)
 - Application-layer hybrid ranking and fusion
 - Distributed microservice execution with gateway, caching, orchestration, and monitoring
 
@@ -170,7 +170,7 @@ grpcurl -plaintext \
 ## Storage Layer
 
 - SolrCloud: distributed BM25 index, faceting, and structured filter execution
-- PostgreSQL + pgvector: semantic vectors and ANN-style nearest-neighbor retrieval
+- PostgreSQL + pgvector HNSW: semantic vectors and ANN nearest-neighbor retrieval using `vector_cosine_ops`
 - Redis: low-latency cache for repeated hybrid query results
 - Metadata persistence: document metadata, vector linkage, and query logging
 
@@ -250,7 +250,7 @@ Latency budget model:
 
 - Embedding generation: <= 60ms
 - Solr retrieval: <= 50ms
-- pgvector retrieval: <= 50ms
+- pgvector HNSW retrieval: <= 50ms
 - Fusion/ranking/serialization: <= 40ms
 
 ## Latency Optimization
@@ -324,6 +324,8 @@ Prerequisites:
 - Maven 3.9+
 - Docker + Docker Compose
 
+- Airflow expects a 32-byte URL-safe Base64 value in `AIRFLOW__CORE__FERNET_KEY` for secret encryption. Generate one locally using the `python3 - <<'PY'` command shown in `Walkthroughs/FERNET_KEY_ROTATION.md`, stash it in `.env.local`, and never commit the file.
+
 Build and run:
 
 ```bash
@@ -352,7 +354,7 @@ Frontend UI:
   - `recommendations for immersive multiplayer racing experiences`
   - `Who won the World Cup in 1994?`
   - `Brazil penalty shootout final 1994`
-  Toggle the mode dropdown (hybrid/lexical/semantic) to see how each signal contributes to the score.
+    Toggle the mode dropdown (hybrid/lexical/semantic) to see how each signal contributes to the score.
 - Optional component: backend services and curl-based search workflows run unchanged without `frontend-service`.
 
 Stop local stack:
